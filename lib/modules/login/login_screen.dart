@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:udemy_flutter/shared/components/components.dart';
 
 class LoginScreen extends StatelessWidget {
 
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
+  var formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -15,74 +17,63 @@ class LoginScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Container(
             padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children:  [
-                const Text(
-                  'Login',
-                  style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold
-                  ),
-                ),
-                const SizedBox(height: 24),
-                TextFormField(
-                  controller: emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  onFieldSubmitted: (value){
-                    print(value);
-                  },
-                    onChanged: (value){
-                    print(value);
-                    },
-                  decoration: const InputDecoration(
-                    labelText: 'Email Address',
-                    prefixIcon: Icon(Icons.mail),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0))
-                    )
-                  )
-                ),
-                const SizedBox(height: 24),
-                TextFormField(
-                  controller: passwordController,
-                    obscureText: true,
-                    decoration: const InputDecoration(
-                        labelText: 'Password',
-                        prefixIcon: Icon(Icons.lock),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10.0))
-                        )
-                    )
-                ),
-                const SizedBox(height: 24),
-                Container(
-                  width: double.infinity,
-                  color: Colors.blue,
-                  child: MaterialButton(
-                    child: const Text(
-                      'Login',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
+            child: Form(
+              key: formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children:  [
+                  const Text(
+                    'Login',
+                    style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold
                     ),
-                    onPressed: (){
-                      print(emailController.text);
+                  ),
+                  const SizedBox(height: 24),
+                  defaultTextFormField(
+                    labelText: 'Email Address',
+                    icon: Icon(Icons.mail),
+                    textController: emailController,
+                    inputType: TextInputType.emailAddress,
+                    validator: (value){
+                      if(value != null)
+                        if(value.isEmpty) return 'Email address must not be empty';
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 24),
+                  defaultTextFormField(
+                    labelText: 'Password',
+                    icon: Icon(Icons.lock),
+                    textController: passwordController,
+                    secure: true,
+                    validator: (value){
+                      if(value != null)
+                        if(value.isEmpty) return 'Password must not be empty';
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 24),
+                  defaultButton(
+                    text: 'Login',
+                    function: (){
+                      if(formKey.currentState?.validate() ?? false)
+                        print(emailController.text);
                       },
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Don\'t have an account?'
-                    ),
-                    TextButton(onPressed: (){}, child: const Text(
-                      'Register Now'
-                    )),
-                  ],
-                ),
-              ],
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Don\'t have an account?'
+                      ),
+                      TextButton(onPressed: (){}, child: const Text(
+                        'Register Now'
+                      )),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
