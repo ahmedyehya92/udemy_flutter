@@ -35,7 +35,9 @@ Widget defaultTextFormField({
   TextInputType inputType = TextInputType.text,
   String? Function(String? value)? validator,
   bool secure = false,
-  double boarderRadius = 10.0
+  double boarderRadius = 10.0,
+  IconData? suffixIcon,
+  Function()? suffixPressed
 }) =>
 TextFormField(
 controller: textController,
@@ -45,6 +47,10 @@ obscureText: secure,
 decoration: InputDecoration(
 labelText: labelText,
 prefixIcon: icon,
+suffixIcon: IconButton(
+  onPressed: suffixPressed,
+  icon: Icon(suffixIcon),
+),
 border: OutlineInputBorder(
 borderRadius: BorderRadius.all(Radius.circular(boarderRadius))
 )
