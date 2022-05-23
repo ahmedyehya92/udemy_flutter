@@ -32,8 +32,32 @@ class _HomeLayoutState extends State<HomeLayout> {
       ),
       body: screens[currentTabIndex],
       floatingActionButton: FloatingActionButton(
-        onPressed: (){
 
+        onPressed: () async
+        {
+          // to wait background task to finish then continue
+          getName().then((value) {
+            print(value);
+            print('osama');
+          });
+
+          // to wait background task to finish then continue also catch error if exist
+          getName().then((value) {
+            print(value);
+            print('osama');
+            throw('error__');
+          }).catchError((error){
+            print(error.toString());
+          });
+
+          // handling errors
+          try {
+            var name =  await getName();
+            print(name);
+            throw('some error');
+          } catch(error) {
+            print('error ${error.toString()}');
+          }
         },
         child: Icon(Icons.add),
       ),
@@ -62,4 +86,11 @@ class _HomeLayoutState extends State<HomeLayout> {
       ),
     );
   }
+}
+
+// TODO async & await
+// background task
+Future<String> getName() async
+{
+  return 'Ahmed';
 }
