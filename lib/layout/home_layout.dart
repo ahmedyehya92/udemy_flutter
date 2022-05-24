@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
@@ -5,6 +7,7 @@ import 'package:udemy_flutter/modules/new_tasks/new_tasks_screen.dart';
 
 import '../modules/archived_tasks/archived_tasks_screen.dart';
 import '../modules/done_tasks/done_tasks_screen.dart';
+import '../shared/components/components.dart';
 
 class HomeLayout extends StatefulWidget {
   const HomeLayout({Key? key}) : super(key: key);
@@ -14,7 +17,11 @@ class HomeLayout extends StatefulWidget {
 }
 
 class _HomeLayoutState extends State<HomeLayout> {
+  late Database database;
   int currentTabIndex = 0;
+  var scaffoldKey = GlobalKey<ScaffoldState>();
+  var isBottomSheetShown = false;
+  IconData fabIcon = Icons.edit;
   List<Widget> screens = [
     NewTasksScreen(),
     DoneTasksScreen(),
@@ -35,6 +42,7 @@ class _HomeLayoutState extends State<HomeLayout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         title: Text(titles[currentTabIndex]),
       ),
@@ -43,6 +51,39 @@ class _HomeLayoutState extends State<HomeLayout> {
 
         onPressed: () async
         {
+          // show bottom sheet
+
+          if(isBottomSheetShown)
+            {
+              Navigator.pop(context);
+              isBottomSheetShown = false;
+              setState(() {
+                fabIcon = Icons.edit;
+              });
+            }
+          else {
+            scaffoldKey.currentState?.showBottomSheet((context) =>
+                Container(
+                  width: double.infinity,
+                  height: 120.0,
+                  color: Colors.blue,
+                  child: Column(
+                    children: [
+                      defaultTextFormField('Title', )
+                    ],
+                  ),
+                )
+            );
+            isBottomSheetShown = true;
+            setState(() {
+              fabIcon = Icons.add;
+            });
+          }
+
+          // to insert dummies data to database
+          //insertDatabase();
+
+          /*
           // to wait background task to finish then continue
           getName().then((value) {
             print(value);
@@ -66,8 +107,9 @@ class _HomeLayoutState extends State<HomeLayout> {
           } catch(error) {
             print('error ${error.toString()}');
           }
+          */
         },
-        child: Icon(Icons.add),
+        child: Icon(fabIcon),
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -94,35 +136,50 @@ class _HomeLayoutState extends State<HomeLayout> {
       ),
     );
   }
-}
 
-// TODO async & await
-// background task
-Future<String> getName() async
-{
-  return 'Ahmed';
-}
+  // TODO async & await
+  // background task
+  Future<String> getName() async
+  {
+    return 'Ahmed';
+  }
 
-void createDatabase() async {
-  var database = await openDatabase(
-    'todo.db',
-    version: 1,
-    onCreate: (database, version) async{
-      print('database created');
-      await database.execute(''
-          'CREATE TABLE tasks '
-          '(id INTEGER PRIMARY KEY, '
-          'title TEXT, '
-          'date TEXT, '
-          'time TEXT, '
-          'status TEXT)').then((value) {
-        print('table created');
-      }).catchError((error){
-        print('Error when creating table ${error.toString()}');
+  void createDatabase() async {
+    database = await openDatabase(
+      'todo.db',
+      version: 1,
+      onCreate: (database, version) async{
+        print('database created');
+        await database.execute(''
+            'CREATE TABLE tasks '
+            '(id INTEGER PRIMARY KEY, '
+            'title TEXT, '
+            'date TEXT, '
+            'time TEXT, '
+            'status TEXT)').then((value) {
+          print('table created');
+        }).catchError((error){
+          print('Error when creating table ${error.toString()}');
+        });
+      },
+      onOpen: (database){
+        print('database opened');
+      },
+    );
+  }
+
+  void insertDatabase(){
+    database.transaction((txn) {
+      return txn.rawInsert(
+          'INSERT INTO tasks ''(title, date, time, status) '
+              'VALUES("First Task", "2022022", "165223221156", "new")')
+          .then((value) { // value is inserted item id
+          print('$value inserted success');
+          }).catchError((error){
+            print("Error When inserting new record ${error.toString()}");
       });
-    },
-    onOpen: (database){
-      print('database opened');
-    },
-  );
+    }
+    );
+  }
 }
+
