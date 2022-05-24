@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:udemy_flutter/modules/new_tasks/new_tasks_screen.dart';
 
 import '../modules/archived_tasks/archived_tasks_screen.dart';
@@ -24,6 +25,13 @@ class _HomeLayoutState extends State<HomeLayout> {
     'Done Tasks',
     'Archived Tasks'
   ];
+
+  @override
+  initState() {
+    super.initState();
+    createDatabase();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,4 +101,28 @@ class _HomeLayoutState extends State<HomeLayout> {
 Future<String> getName() async
 {
   return 'Ahmed';
+}
+
+void createDatabase() async {
+  var database = await openDatabase(
+    'todo.db',
+    version: 1,
+    onCreate: (database, version) async{
+      print('database created');
+      await database.execute(''
+          'CREATE TABLE tasks '
+          '(id INTEGER PRIMARY KEY, '
+          'title TEXT, '
+          'date TEXT, '
+          'time TEXT, '
+          'status TEXT)').then((value) {
+        print('table created');
+      }).catchError((error){
+        print('Error when creating table ${error.toString()}');
+      });
+    },
+    onOpen: (database){
+      print('database opened');
+    },
+  );
 }
