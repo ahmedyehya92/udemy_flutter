@@ -35,12 +35,16 @@ Widget defaultTextFormField({
   TextInputType inputType = TextInputType.text,
   String? Function(String? value)? validator,
   bool secure = false,
-  double boarderRadius = 10.0,
+  double boarderRadius = 5.0,
   IconData? suffixIcon,
-  Function()? suffixPressed
+  Function()? suffixPressed,
+  Function()? onClick,
+  enabled = true
 }) =>
 TextFormField(
 controller: textController,
+enabled: enabled,
+onTap: onClick,
 validator: validator,
 obscureText: secure,
     keyboardType: inputType,
