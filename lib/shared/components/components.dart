@@ -60,3 +60,38 @@ borderRadius: BorderRadius.all(Radius.circular(boarderRadius))
 )
 )
 );
+
+Widget buildTaskItem(Map taskModel) => Padding(
+padding: EdgeInsets.all(16.0),
+child: Row(
+children: [
+CircleAvatar(
+radius:40.0,
+child: Text('${taskModel['time']}'),
+),
+SizedBox(
+width:20.0,
+),
+Column(
+mainAxisSize: MainAxisSize.min,
+crossAxisAlignment: CrossAxisAlignment.start,
+
+children: [
+Text(
+'${taskModel['title']}',
+style: TextStyle(
+fontSize:18.0,
+fontWeight: FontWeight.bold
+),
+),
+Text(
+'${taskModel['date']}',
+style: TextStyle(
+color: Colors.grey
+),
+)
+],
+)
+],
+),
+);

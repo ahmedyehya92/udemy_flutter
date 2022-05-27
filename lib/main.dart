@@ -1,3 +1,4 @@
+import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:udemy_flutter/layout/home_layout.dart';
 import 'package:udemy_flutter/modules/users/UserScreen.dart';
@@ -9,11 +10,17 @@ import 'package:udemy_flutter/modules/messanger/messanger_screen.dart';
 import 'modules/bmi/bmi_screen.dart';
 import 'modules/login/login_screen.dart';
 import 'modules/messanger/messanger_screen_list_view.dart';
+import 'shared/bloc_observer.dart';
 
 void main() {
   // run widget
-  runApp(MyApp());
-
+  BlocOverrides.runZoned(
+        () {
+      // Use cubits...
+          runApp(MyApp());
+    },
+    blocObserver: MyBlocObserver(),
+  );
 }
 
 // Stateless
