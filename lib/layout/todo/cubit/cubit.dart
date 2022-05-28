@@ -3,11 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:udemy_flutter/layout/cubit/states.dart';
+import 'package:udemy_flutter/layout/todo/cubit/states.dart';
+
 import 'package:udemy_flutter/modules/archived_tasks/archived_tasks_screen.dart';
 
-import '../../modules/done_tasks/done_tasks_screen.dart';
-import '../../modules/new_tasks/new_tasks_screen.dart';
+import '../../../modules/done_tasks/done_tasks_screen.dart';
+import '../../../modules/new_tasks/new_tasks_screen.dart';
+
 
 class HomeCubit extends Cubit<HomeStates>{
   HomeCubit () : super(HomeInitialState()) {
@@ -79,6 +81,34 @@ class HomeCubit extends Cubit<HomeStates>{
         getTasksFromDatabase();
       }).catchError((error){
         print("Error When inserting new record ${error.toString()}");
+      });
+    }
+    );
+  }
+
+  makeTaskDone(int id) {
+    database.transaction((txn) {
+      return txn.rawUpdate('UPDATE tasks SET status = ? WHERE id = ?', ['done', '$id']
+      ).then((value) {
+        print('makeTaskDone ==> $value');
+        emit(UpdateTaskToDoneState());
+        getTasksFromDatabase();
+      }).catchError((error){
+        print("makeTaskDone ==> Error When updating database ${error.toString()}");
+      });
+    }
+    );
+  }
+
+  deleteTask(int id) {
+    database.transaction((txn) {
+      return txn.rawDelete('DELETE FROM tasks WHERE id = ?', ['$id']
+      ).then((value) {
+        print('deleteTask ==> $value');
+        emit(DeleteTaskState());
+        getTasksFromDatabase();
+      }).catchError((error){
+        print("makeTaskDone ==> Error When updating database ${error.toString()}");
       });
     }
     );

@@ -9,7 +9,7 @@ Widget defaultButton({
   Color? color = Colors.blue,
   Color? textColor = Colors.white,
   double radius = 5.0,
-  required Function() function
+  required Function? function()
         }) =>
     Container(
       width: width,
@@ -61,7 +61,7 @@ borderRadius: BorderRadius.all(Radius.circular(boarderRadius))
 )
 );
 
-Widget buildTaskItem(Map taskModel) => Padding(
+Widget buildTaskItem(Map taskModel, Function? doneTask(), Function? archiveTask(), Function? deleteTask()) => Padding(
 padding: EdgeInsets.all(16.0),
 child: Row(
 children: [
@@ -72,25 +72,62 @@ child: Text('${taskModel['time']}'),
 SizedBox(
 width:20.0,
 ),
-Column(
-mainAxisSize: MainAxisSize.min,
-crossAxisAlignment: CrossAxisAlignment.start,
+Row(
+  children: [
+    Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
 
-children: [
-Text(
-'${taskModel['title']}',
-style: TextStyle(
-fontSize:18.0,
-fontWeight: FontWeight.bold
-),
-),
-Text(
-'${taskModel['date']}',
-style: TextStyle(
-color: Colors.grey
-),
-)
-],
+      children: [
+        Text(
+          '${taskModel['title']}',
+          style: TextStyle(
+              fontSize:18.0,
+              fontWeight: FontWeight.bold
+          ),
+        ),
+        Text(
+          '${taskModel['date']}',
+          style: TextStyle(
+              color: Colors.grey
+          ),
+        ),
+        SizedBox(
+          height:8.0,
+        ),
+        Row(
+          children: [
+            defaultButton(
+                text: 'done',
+                function: doneTask,
+                width: 70.0,
+                color: Colors.green
+            ),
+            SizedBox(
+              width: 8.0,
+            ),
+            defaultButton(
+                text: 'Archive',
+                function: archiveTask,
+                width: 80.0,
+                color: Colors.redAccent
+            ),
+          ],
+        ),
+      ],
+    ),
+    RawMaterialButton(
+      onPressed: deleteTask,
+      elevation: 2.0,
+      fillColor: Colors.white,
+      child: Icon(
+        Icons.delete,
+        size: 35.0,
+      ),
+      padding: EdgeInsets.all(15.0),
+      shape: CircleBorder(),
+    )
+  ],
 )
 ],
 ),

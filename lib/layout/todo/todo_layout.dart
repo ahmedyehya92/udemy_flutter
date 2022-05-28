@@ -6,16 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:udemy_flutter/layout/cubit/cubit.dart';
-import 'package:udemy_flutter/layout/cubit/states.dart';
+import 'package:udemy_flutter/layout/todo/cubit/states.dart';
+
 import 'package:udemy_flutter/modules/new_tasks/new_tasks_screen.dart';
 
-import '../modules/archived_tasks/archived_tasks_screen.dart';
-import '../modules/done_tasks/done_tasks_screen.dart';
-import '../shared/components/components.dart';
-import '../shared/components/conestants.dart';
+import '../../modules/archived_tasks/archived_tasks_screen.dart';
+import '../../modules/done_tasks/done_tasks_screen.dart';
+import '../../shared/components/components.dart';
+import '../../shared/components/conestants.dart';
+import 'cubit/cubit.dart';
 
-class HomeLayout extends StatelessWidget {
+class TodoLayout extends StatelessWidget {
   late Database database;
   var scaffoldKey = GlobalKey<ScaffoldState>();
   var formKey = GlobalKey<FormState>();
