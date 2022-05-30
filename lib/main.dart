@@ -9,6 +9,7 @@ import 'package:udemy_flutter/modules/counter/counter_screen.dart';
 import 'package:udemy_flutter/modules/home/home_screen.dart';
 import 'package:udemy_flutter/modules/messanger/messanger_screen.dart';
 import 'package:udemy_flutter/shared/components/conestants.dart';
+import 'package:udemy_flutter/shared/network/remote/dio_helper.dart';
 
 import 'modules/bmi/bmi_screen.dart';
 import 'modules/login/login_screen.dart';
@@ -21,6 +22,7 @@ void main() {
         () {
       // Use cubits...
           runApp(MyApp());
+          DioHelper().getTopBusinessNews();
     },
     blocObserver: MyBlocObserver(),
   );
@@ -39,20 +41,43 @@ class MyApp extends StatelessWidget
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        scaffoldBackgroundColor: const Color(0xff5549ad),
+        scaffoldBackgroundColor: Colors.white,
         appBarTheme: const AppBarTheme(
           systemOverlayStyle: SystemUiOverlayStyle(
             //statusBarColor: Color(0xff5549ad),
             //statusBarBrightness: Brightness.light,
             //statusBarIconBrightness: Brightness.light,
           ),
-          backgroundColor: Color(0xff5549ad),
+          backgroundColor: Colors.white,
           elevation: 0.0,
+          titleTextStyle: TextStyle(
+            color: Colors.black
+          ),
+          actionsIconTheme: IconThemeData(
+            color: Colors.black
+          )
         ),
         bottomNavigationBarTheme:  BottomNavigationBarThemeData(
           type: BottomNavigationBarType.fixed,
           selectedItemColor: mainColor
-        )
+        ),
+
+      ),
+      darkTheme: ThemeData(
+          scaffoldBackgroundColor: const Color(0xff5549ad),
+          appBarTheme: const AppBarTheme(
+            systemOverlayStyle: SystemUiOverlayStyle(
+              //statusBarColor: Color(0xff5549ad),
+              //statusBarBrightness: Brightness.light,
+              //statusBarIconBrightness: Brightness.light,
+            ),
+            backgroundColor: Color(0xff5549ad),
+            elevation: 0.0,
+          ),
+          bottomNavigationBarTheme:  BottomNavigationBarThemeData(
+              type: BottomNavigationBarType.fixed,
+              selectedItemColor: mainColor
+          )
       ),
       home: const NewsLayout()
     );
