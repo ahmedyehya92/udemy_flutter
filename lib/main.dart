@@ -22,7 +22,6 @@ void main() {
         () {
       // Use cubits...
           runApp(MyApp());
-          DioHelper().getTopBusinessNews();
     },
     blocObserver: MyBlocObserver(),
   );

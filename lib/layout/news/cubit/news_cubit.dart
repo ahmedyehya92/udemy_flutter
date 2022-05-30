@@ -6,6 +6,8 @@ import 'package:udemy_flutter/modules/settings/settings_screen.dart';
 import 'package:udemy_flutter/modules/since_news/since_news_screen.dart';
 import 'package:udemy_flutter/modules/sports/sports_news_screen.dart';
 
+import '../../../shared/network/remote/dio_helper.dart';
+
 class NewsCubit extends Cubit<NewsState> {
   NewsCubit() : super(NewsInitialState());
   static NewsCubit get(context) => BlocProvider.of(context);
@@ -24,9 +26,21 @@ class NewsCubit extends Cubit<NewsState> {
     const SettingsScreen()
   ];
 
+  List<Map> businessNews = [];
+
   void changeNavBarCurrentScreen(int index) {
     currentBottomNavIndex = index;
     emit(BottomNaveChangeState());
+  }
+
+  getBusinessNews()
+  {
+    DioHelper().getTopBusinessNews()?.then((value) {
+      businessNews = value?.data['articles'];
+      businessNews[0]['title'];
+    }).catchError((error) {
+      print(error.toString());
+    });
   }
 
 }

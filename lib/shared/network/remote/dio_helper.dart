@@ -26,11 +26,7 @@ class DioHelper{
           'category':'business',
           'apiKey':_apiKey
     }
-    )?.then((value) {
-      print(value);
-    }).catchError((error) {
-      print(error.toString());
-    });
+    );
   }
 
 }
