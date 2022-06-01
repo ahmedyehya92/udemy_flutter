@@ -132,3 +132,69 @@ Row(
 ],
 ),
 );
+
+buildNewsItem({String? text, String? imgUrl}) {
+  return Padding(
+    padding:const EdgeInsets.all(16.0),
+    child: Material(
+      elevation: 10.0,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            height: 120.0,
+            width: double.infinity,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadiusDirectional.only(topStart: Radius.circular(10.0), topEnd: Radius.circular(10.0)),
+                color: Colors.white,
+                image: DecorationImage(
+                  image: NetworkImage(imgUrl??''),
+                  fit: BoxFit.cover,
+                )
+            ),
+          ),
+          const SizedBox(
+            height: 8.0,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              //NewsCubit.get(context).businessNews[0]['title'],
+              text?? '',
+              textAlign: TextAlign.right,
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20.0
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 8.0,
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget errorView(IconData icon, String text)
+{
+  return Center(
+     child: Column(
+       mainAxisAlignment: MainAxisAlignment.center,
+       children: [
+         Icon(
+           icon,
+           size: 50.0,
+           color: Colors.grey,
+         ),
+         Text(
+           text,
+           style: const TextStyle(
+               color: Colors.grey
+           ),
+         )
+       ],
+     ),
+  );
+}

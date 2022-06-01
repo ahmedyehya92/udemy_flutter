@@ -26,7 +26,7 @@ class NewsCubit extends Cubit<NewsState> {
     const SettingsScreen()
   ];
 
-  List<Map> businessNews = [];
+  List<dynamic> businessNews = [];
 
   void changeNavBarCurrentScreen(int index) {
     currentBottomNavIndex = index;
@@ -35,11 +35,14 @@ class NewsCubit extends Cubit<NewsState> {
 
   getBusinessNews()
   {
+    emit(GetBusinessNewsLoadingState());
     DioHelper().getTopBusinessNews()?.then((value) {
       businessNews = value?.data['articles'];
-      businessNews[0]['title'];
+      print(businessNews[0]['title']);
+      emit(GetBusinessNewsSuccessState());
     }).catchError((error) {
       print(error.toString());
+      emit(GetBusinessNewsFailureState(error.toString()));
     });
   }
 

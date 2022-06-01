@@ -22,7 +22,7 @@ class DioHelper{
     return await _getData(
         path: 'v2/top-headlines',
         queryParameters: {
-          'country':'eg',
+          'country':'br',
           'category':'business',
           'apiKey':_apiKey
     }
