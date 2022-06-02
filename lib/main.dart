@@ -5,18 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udemy_flutter/app_bloc/app_cubit.dart';
 import 'package:udemy_flutter/app_bloc/app_states.dart';
 import 'package:udemy_flutter/layout/news/news_layout.dart';
-import 'package:udemy_flutter/layout/todo/todo_layout.dart';
-import 'package:udemy_flutter/modules/users/UserScreen.dart';
-import 'package:udemy_flutter/modules/bmi_result/bmi_result_screen.dart';
-import 'package:udemy_flutter/modules/counter/counter_screen.dart';
-import 'package:udemy_flutter/modules/home/home_screen.dart';
-import 'package:udemy_flutter/modules/messanger/messanger_screen.dart';
 import 'package:udemy_flutter/shared/components/conestants.dart';
-import 'package:udemy_flutter/shared/network/remote/dio_helper.dart';
+import 'package:udemy_flutter/shared/network/local/cache_helper.dart';
 
-import 'modules/bmi/bmi_screen.dart';
-import 'modules/login/login_screen.dart';
-import 'modules/messanger/messanger_screen_list_view.dart';
 import 'shared/bloc_observer.dart';
 
 void main() {
@@ -24,6 +15,11 @@ void main() {
   BlocOverrides.runZoned(
     () {
       // Use cubits...
+      WidgetsFlutterBinding.ensureInitialized();
+      CacheHelper cacheHelper = CacheHelper();
+
+      //cacheHelper.getThemeMode().then((value) => themeMode = value == ThemeAppMode.light ? ThemeMode.light : ThemeMode.dark);
+
       runApp(MyApp());
     },
     blocObserver: MyBlocObserver(),
@@ -36,6 +32,8 @@ void main() {
 // class MyApp
 
 class MyApp extends StatelessWidget {
+  //const MyApp({Key? key}) : super(key: key);
+
   // manager and builder design
   @override
   Widget build(BuildContext context) {
@@ -44,9 +42,13 @@ class MyApp extends StatelessWidget {
         child: BlocConsumer<AppCubit, AppStates>(
             listener: (context, state) {},
             builder: (context, state) {
+              ThemeMode? themeMode =
+                  AppCubit.get(context).themMode == ThemeAppMode.light
+                      ? ThemeMode.light
+                      : ThemeMode.dark;
               return MaterialApp(
                   debugShowCheckedModeBanner: false,
-                  themeMode: AppCubit.get(context).themMode == ThemeAppMode.light ? ThemeMode.light : ThemeMode.dark,
+                  themeMode: themeMode,
                   theme: ThemeData(
                       scaffoldBackgroundColor: Colors.white,
                       appBarTheme: const AppBarTheme(
