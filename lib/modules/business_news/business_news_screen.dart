@@ -27,6 +27,7 @@ class BusinessNewsScreen extends StatelessWidget {
               itemBuilder: (context, index) => buildNewsItem(
                 text: NewsCubit.get(context).businessNews[index]['title'],
                 imgUrl: NewsCubit.get(context).businessNews[index]['urlToImage'],
+                context: context
               ),
               itemCount: NewsCubit.get(context).businessNews.length,
               separatorBuilder: (context, item) => const SizedBox(height:10.0),

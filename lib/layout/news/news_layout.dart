@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:udemy_flutter/app_bloc/app_cubit.dart';
+import 'package:udemy_flutter/app_bloc/app_states.dart';
 import 'package:udemy_flutter/layout/news/cubit/news_cubit.dart';
 import 'package:udemy_flutter/layout/news/cubit/news_states.dart';
+import 'package:udemy_flutter/shared/components/conestants.dart';
 
 class NewsLayout extends StatelessWidget {
   const NewsLayout({Key? key}) : super(key: key);
@@ -25,7 +28,8 @@ class NewsLayout extends StatelessWidget {
                   onPressed: (){
 
                   },
-                )
+                ),
+                iconButtonConsumer()
               ],
             ),
             body: NewsCubit.get(context).subScreensList[NewsCubit.get(context).currentBottomNavIndex],
@@ -48,10 +52,6 @@ class NewsLayout extends StatelessWidget {
                     icon: Icon(Icons.science),
                     label: 'Since'
                 ),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.settings),
-                    label: 'Settings'
-                )
               ],
             ),
           );
@@ -59,4 +59,24 @@ class NewsLayout extends StatelessWidget {
       ),
     );
   }
+}
+
+iconButtonConsumer(){
+  return BlocConsumer<AppCubit, AppStates> (
+      listener: (context, state) {
+
+  },
+  builder: (context, state){
+        return IconButton(
+          icon: const Icon(Icons.brightness_4_outlined),
+          onPressed: (){
+            if(AppCubit.get(context).themMode == ThemeAppMode.light)
+              AppCubit.get(context).changeThemeMode(themeAppMode: ThemeAppMode.dark);
+            else
+              AppCubit.get(context).changeThemeMode(themeAppMode: ThemeAppMode.light);
+
+          },
+        );
+  }
+  );
 }

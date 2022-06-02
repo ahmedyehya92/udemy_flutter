@@ -133,7 +133,7 @@ Row(
 ),
 );
 
-buildNewsItem({String? text, String? imgUrl}) {
+buildNewsItem({String? text, String? imgUrl, context}) {
   return Padding(
     padding:const EdgeInsets.all(16.0),
     child: Material(
@@ -162,10 +162,7 @@ buildNewsItem({String? text, String? imgUrl}) {
               //NewsCubit.get(context).businessNews[0]['title'],
               text?? '',
               textAlign: TextAlign.right,
-              style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20.0
-              ),
+              style: Theme.of(context).textTheme.bodyText1
             ),
           ),
           const SizedBox(

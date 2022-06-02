@@ -17,13 +17,11 @@ class NewsCubit extends Cubit<NewsState> {
     'Business',
     'Sports',
     'Since',
-    'Settings'
   ];
   var subScreensList = [
     const BusinessNewsScreen(),
     const SportsNewsScreen(),
     const SinceNewsScreen(),
-    const SettingsScreen()
   ];
 
   List<dynamic> businessNews = [];

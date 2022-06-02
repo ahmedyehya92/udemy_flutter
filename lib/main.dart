@@ -1,6 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:udemy_flutter/app_bloc/app_cubit.dart';
+import 'package:udemy_flutter/app_bloc/app_states.dart';
 import 'package:udemy_flutter/layout/news/news_layout.dart';
 import 'package:udemy_flutter/layout/todo/todo_layout.dart';
 import 'package:udemy_flutter/modules/users/UserScreen.dart';
@@ -19,9 +22,9 @@ import 'shared/bloc_observer.dart';
 void main() {
   // run widget
   BlocOverrides.runZoned(
-        () {
+    () {
       // Use cubits...
-          runApp(MyApp());
+      runApp(MyApp());
     },
     blocObserver: MyBlocObserver(),
   );
@@ -32,54 +35,67 @@ void main() {
 
 // class MyApp
 
-class MyApp extends StatelessWidget
-{
+class MyApp extends StatelessWidget {
   // manager and builder design
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        scaffoldBackgroundColor: Colors.white,
-        appBarTheme: const AppBarTheme(
-          systemOverlayStyle: SystemUiOverlayStyle(
-            //statusBarColor: Color(0xff5549ad),
-            //statusBarBrightness: Brightness.light,
-            //statusBarIconBrightness: Brightness.light,
-          ),
-          backgroundColor: Colors.white,
-          elevation: 0.0,
-          titleTextStyle: TextStyle(
-            color: Colors.black
-          ),
-          actionsIconTheme: IconThemeData(
-            color: Colors.black
-          )
-        ),
-        bottomNavigationBarTheme:  BottomNavigationBarThemeData(
-          type: BottomNavigationBarType.fixed,
-          selectedItemColor: mainColor
-        ),
-
-      ),
-      darkTheme: ThemeData(
-          scaffoldBackgroundColor: const Color(0xff5549ad),
-          appBarTheme: const AppBarTheme(
-            systemOverlayStyle: SystemUiOverlayStyle(
-              //statusBarColor: Color(0xff5549ad),
-              //statusBarBrightness: Brightness.light,
-              //statusBarIconBrightness: Brightness.light,
-            ),
-            backgroundColor: Color(0xff5549ad),
-            elevation: 0.0,
-          ),
-          bottomNavigationBarTheme:  BottomNavigationBarThemeData(
-              type: BottomNavigationBarType.fixed,
-              selectedItemColor: mainColor
-          )
-      ),
-      home: const NewsLayout()
-    );
+    return BlocProvider(
+        create: (BuildContext context) => AppCubit(),
+        child: BlocConsumer<AppCubit, AppStates>(
+            listener: (context, state) {},
+            builder: (context, state) {
+              return MaterialApp(
+                  debugShowCheckedModeBanner: false,
+                  themeMode: AppCubit.get(context).themMode == ThemeAppMode.light ? ThemeMode.light : ThemeMode.dark,
+                  theme: ThemeData(
+                      scaffoldBackgroundColor: Colors.white,
+                      appBarTheme: const AppBarTheme(
+                          systemOverlayStyle: SystemUiOverlayStyle(
+                              //statusBarColor: Color(0xff5549ad),
+                              //statusBarBrightness: Brightness.light,
+                              //statusBarIconBrightness: Brightness.light,
+                              ),
+                          backgroundColor: Colors.white,
+                          elevation: 0.0,
+                          titleTextStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20.0),
+                          actionsIconTheme: IconThemeData(color: Colors.black)),
+                      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+                          type: BottomNavigationBarType.fixed,
+                          selectedItemColor: mainColor,
+                          unselectedItemColor: Colors.grey,
+                          backgroundColor: Colors.white,
+                          elevation: 20.0),
+                      textTheme: const TextTheme(
+                          bodyText1: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black))),
+                  darkTheme: ThemeData(
+                      scaffoldBackgroundColor: const Color(0xff5549ad),
+                      appBarTheme: AppBarTheme(
+                          systemOverlayStyle: const SystemUiOverlayStyle(
+                              //statusBarColor: Color(0xff5549ad),
+                              //statusBarBrightness: Brightness.light,
+                              //statusBarIconBrightness: Brightness.light,
+                              ),
+                          backgroundColor: mainColor,
+                          elevation: 0.0,
+                          titleTextStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20.0),),
+                      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+                          type: BottomNavigationBarType.fixed,
+                          selectedItemColor: Colors.white,
+                          unselectedItemColor: Colors.grey,
+                          backgroundColor: mainColor,
+                          elevation: 20.0),
+                      textTheme: const TextTheme(
+                          bodyText1: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black))),
+                  home: const Directionality(
+                    textDirection: TextDirection.ltr,
+                    child: NewsLayout(),
+                  ));
+            }));
   }
-
 }
