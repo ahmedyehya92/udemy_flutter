@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../components/conestants.dart';
 
 ThemeData theme = ThemeData(
+    primarySwatch: mainMaterialColor,
     scaffoldBackgroundColor: Colors.white,
     appBarTheme: const AppBarTheme(
         iconTheme: IconThemeData(color: Colors.black),

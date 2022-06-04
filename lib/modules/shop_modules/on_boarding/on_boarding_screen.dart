@@ -1,12 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:udemy_flutter/shared/components/components.dart';
+import 'package:udemy_flutter/shared/components/conestants.dart';
 
-class OnBoardingScreen extends StatelessWidget {
+import '../login/login_screen.dart';
+
+class OnBoardingScreen extends StatefulWidget {
+  @override
+  State<OnBoardingScreen> createState() => _OnBoardingScreenState();
+}
+
+class _OnBoardingScreenState extends State<OnBoardingScreen> {
+  var boardingController = PageController();
+  bool isLastPage = false;
   List<BoardingModel> boardingList = [
     BoardingModel(
       title: 'Order Online',
       body: 'Make an order sitting and choose online',
-      image: 'assets/images/boarding2.jpg',
+      image: 'assets/images/boarding1.png',
     ),
     BoardingModel(
       title: 'Mobile Payments',
@@ -24,24 +36,66 @@ class OnBoardingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          actions: [
+            TextButton(
+              child: Text(
+                'Skip',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20.0,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+              onPressed: () {
+                navigateAndFinish(context, ShopLoginScreen());
+              },
+            )
+          ],
+        ),
         body: Padding(
           padding: EdgeInsets.all(30.0),
           child: Column(
             children: [
               Expanded(
                 child: PageView.builder(
+                  controller: boardingController,
                   physics: BouncingScrollPhysics(),
                   itemBuilder: (context, index) =>
                       buildBoardingItem(boardingList[index]),
                   itemCount: boardingList.length,
+                  onPageChanged: (index) {
+                    if (index == boardingList.length - 1) {
+                      print('last index');
+                      isLastPage = true;
+                    } else
+                      isLastPage = false;
+                  },
                 ),
               ),
               Row(children: [
-                Text('Indicator'),
+                SmoothPageIndicator(
+                  controller: boardingController,
+                  count: boardingList.length,
+                  effect: ExpandingDotsEffect(
+                      dotColor: Colors.grey,
+                      dotHeight: 10.0,
+                      expansionFactor: 4,
+                      dotWidth: 10.0,
+                      spacing: 5.0,
+                      activeDotColor: mainColor),
+                ),
                 Spacer(),
                 FloatingActionButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    if (isLastPage == false) {
+                      boardingController.nextPage(
+                          duration: Duration(milliseconds: 1000),
+                          curve: Curves.fastLinearToSlowEaseIn);
+                    } else {
+                      navigateAndFinish(context, ShopLoginScreen());
+                    }
+                  },
                   child: Icon(Icons.arrow_forward_ios),
                 ),
               ])
@@ -52,24 +106,30 @@ class OnBoardingScreen extends StatelessWidget {
 
   Widget buildBoardingItem(BoardingModel boardingItem) => Column(
         children: [
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Expanded(
+          Expanded(
+            flex: 1,
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
               child: Image(
                 image: AssetImage(boardingItem.image),
               ),
             ),
           ),
-          Spacer(),
-          SizedBox(height: 16.0),
-          Text(boardingItem.title,
-              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
-          SizedBox(height: 16.0),
-          Text(boardingItem.body,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 20.0,
-              )),
+          Expanded(
+            flex: 1,
+            child: Column(children: [
+              SizedBox(height: 16.0),
+              Text(boardingItem.title,
+                  style:
+                      TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
+              SizedBox(height: 16.0),
+              Text(boardingItem.body,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20.0,
+                  )),
+            ]),
+          )
         ],
       );
 }
