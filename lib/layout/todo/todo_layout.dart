@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,12 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:udemy_flutter/layout/todo/cubit/states.dart';
 
-import 'package:udemy_flutter/modules/new_tasks/new_tasks_screen.dart';
-
-import '../../modules/archived_tasks/archived_tasks_screen.dart';
-import '../../modules/done_tasks/done_tasks_screen.dart';
 import '../../shared/components/components.dart';
-import '../../shared/components/conestants.dart';
 import 'cubit/cubit.dart';
 
 class TodoLayout extends StatelessWidget {

@@ -1,17 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../models/user/user_model.dart';
+import '../../../models/user/user_model.dart';
 
-
-class UserScreen extends StatelessWidget{
-
+class UserScreen extends StatelessWidget {
   List<UserModel> users = [
-    UserModel(
-      id: 1,
-      name: "Ahmed",
-      phone: "011254"
-    ),
+    UserModel(id: 1, name: "Ahmed", phone: "011254"),
     UserModel(
         id: 2,
         name: "Osama",

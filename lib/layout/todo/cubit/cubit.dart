@@ -5,20 +5,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:udemy_flutter/layout/todo/cubit/states.dart';
 
-import 'package:udemy_flutter/modules/archived_tasks/archived_tasks_screen.dart';
+import '../../../modules/todo_modules/archived_tasks/archived_tasks_screen.dart';
+import '../../../modules/todo_modules/done_tasks/done_tasks_screen.dart';
+import '../../../modules/todo_modules/new_tasks/new_tasks_screen.dart';
 
-import '../../../modules/done_tasks/done_tasks_screen.dart';
-import '../../../modules/new_tasks/new_tasks_screen.dart';
-
-
-class HomeCubit extends Cubit<HomeStates>{
-  HomeCubit () : super(HomeInitialState()) {
+class HomeCubit extends Cubit<HomeStates> {
+  HomeCubit() : super(HomeInitialState()) {
     emit(HomeInitialState());
   }
 
   static HomeCubit get(context) => BlocProvider.of(context);
   int currentTabIndex = 0;
-  List<Widget> screens = [NewTasksScreen(), DoneTasksScreen(), ArchivedTasksScreen()];
+  List<Widget> screens = [
+    NewTasksScreen(),
+    DoneTasksScreen(),
+    ArchivedTasksScreen()
+  ];
   List<String> titles = ['Tasks', 'Done Tasks', 'Archived Tasks'];
   List<Map> tasks = [];
   late Database database;

@@ -17,16 +17,17 @@ class DioHelper{
     return await dio.get(path, queryParameters: queryParameters);
   }
 
-  Future<Response?>? getTopBusinessNews()
-  async {
-    return await _getData(
-        path: 'v2/top-headlines',
-        queryParameters: {
-          'country':'eg',
-          'category':'business',
-          'apiKey':_apiKey
-    }
-    );
+  Future<Response?>? getTopBusinessNews() async {
+    return await _getData(path: 'v2/top-headlines', queryParameters: {
+      'country': 'us',
+      'category': 'business',
+      'apiKey': _apiKey
+    });
   }
 
+  Future<Response?>? searchNews(String value) async {
+    return await _getData(
+        path: 'v2/everything',
+        queryParameters: {'q': value, 'apiKey': _apiKey});
+  }
 }

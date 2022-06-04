@@ -5,58 +5,52 @@ import 'package:udemy_flutter/app_bloc/app_cubit.dart';
 import 'package:udemy_flutter/app_bloc/app_states.dart';
 import 'package:udemy_flutter/layout/news/cubit/news_cubit.dart';
 import 'package:udemy_flutter/layout/news/cubit/news_states.dart';
+import 'package:udemy_flutter/shared/components/components.dart';
 import 'package:udemy_flutter/shared/components/conestants.dart';
+
+import '../../modules/news_modules/search/search_screen.dart';
 
 class NewsLayout extends StatelessWidget {
   const NewsLayout({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (BuildContext context) => NewsCubit(),
-      child: BlocConsumer<NewsCubit, NewsState> (
-        listener: (context, state) {
-
-        },
-        builder: (context, state){
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(NewsCubit.get(context).subScreensTitlesList[NewsCubit.get(context).currentBottomNavIndex]),
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.search),
-                  onPressed: (){
-
-                  },
-                ),
-                iconButtonConsumer()
-              ],
-            ),
-            body: NewsCubit.get(context).subScreensList[NewsCubit.get(context).currentBottomNavIndex],
-            bottomNavigationBar: BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              currentIndex: NewsCubit.get(context).currentBottomNavIndex,
-              onTap: (index){
-                NewsCubit.get(context).changeNavBarCurrentScreen(index);
-              },
-              items: const [
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.business),
-                    label: 'Business'
-                ),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.sports),
-                    label: 'Sports'
-                ),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.science),
-                    label: 'Since'
-                ),
-              ],
-            ),
-          );
-        },
-      ),
+    return BlocConsumer<NewsCubit, NewsState>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(NewsCubit.get(context).subScreensTitlesList[
+                NewsCubit.get(context).currentBottomNavIndex]),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.search),
+                onPressed: () {
+                  navigateTo(context, SearchScreen());
+                },
+              ),
+              iconButtonConsumer()
+            ],
+          ),
+          body: NewsCubit.get(context)
+              .subScreensList[NewsCubit.get(context).currentBottomNavIndex],
+          bottomNavigationBar: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            currentIndex: NewsCubit.get(context).currentBottomNavIndex,
+            onTap: (index) {
+              NewsCubit.get(context).changeNavBarCurrentScreen(index);
+            },
+            items: const [
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.business), label: 'Business'),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.sports), label: 'Sports'),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.science), label: 'Since'),
+            ],
+          ),
+        );
+      },
     );
   }
 }

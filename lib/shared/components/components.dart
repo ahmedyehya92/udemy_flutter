@@ -1,7 +1,7 @@
-import 'dart:ffi';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../../modules/news_modules/web_view/web_view_screen.dart';
 
 Widget defaultButton({
   required String text,
@@ -28,36 +28,37 @@ Widget defaultButton({
       ),
     );
 
-Widget defaultTextFormField({
-  required String labelText,
-  required TextEditingController textController,
-  required Icon icon,
-  TextInputType inputType = TextInputType.text,
-  String? Function(String? value)? validator,
-  bool secure = false,
-  double boarderRadius = 5.0,
-  IconData? suffixIcon,
-  Function()? suffixPressed,
-  Function()? onClick,
-  enabled = true
-}) =>
+Widget defaultTextFormField(
+        {required String labelText,
+        required TextEditingController textController,
+        required Icon icon,
+        TextInputType inputType = TextInputType.text,
+        String? Function(String? value)? validator,
+        String? Function(String? value)? onChanged,
+        bool secure = false,
+        double boarderRadius = 5.0,
+        IconData? suffixIcon,
+        Function()? suffixPressed,
+        Function()? onClick,
+        enabled = true}) =>
 TextFormField(
-controller: textController,
-enabled: enabled,
-onTap: onClick,
-validator: validator,
-obscureText: secure,
-    keyboardType: inputType,
-decoration: InputDecoration(
-labelText: labelText,
-prefixIcon: icon,
-suffixIcon: IconButton(
-  onPressed: suffixPressed,
-  icon: Icon(suffixIcon),
-),
-border: OutlineInputBorder(
-borderRadius: BorderRadius.all(Radius.circular(boarderRadius))
-)
+    controller: textController,
+        enabled: enabled,
+        onTap: onClick,
+        validator: validator,
+        obscureText: secure,
+        onChanged: onChanged,
+        keyboardType: inputType,
+        decoration: InputDecoration(
+            labelText: labelText,
+            prefixIcon: icon,
+            suffixIcon: IconButton(
+              onPressed: suffixPressed,
+              icon: Icon(suffixIcon),
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(boarderRadius)),
+            )
 )
 );
 
@@ -133,42 +134,47 @@ Row(
 ),
 );
 
-buildNewsItem({String? text, String? imgUrl, context}) {
-  return Padding(
-    padding:const EdgeInsets.all(16.0),
-    child: Material(
-      elevation: 10.0,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            height: 120.0,
-            width: double.infinity,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadiusDirectional.only(topStart: Radius.circular(10.0), topEnd: Radius.circular(10.0)),
-                color: Colors.white,
-                image: DecorationImage(
-                  image: NetworkImage(imgUrl??''),
-                  fit: BoxFit.cover,
-                )
+buildNewsItem({String? text, String? imgUrl, context, String? newsUrl}) {
+  return InkWell(
+    onTap: () {
+      navigateTo(context, WebViewScreen(newsUrl ?? '', text ?? ''));
+    },
+    child: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Material(
+        elevation: 10.0,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              height: 120.0,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadiusDirectional.only(
+                      topStart: Radius.circular(10.0),
+                      topEnd: Radius.circular(10.0)),
+                  color: Colors.white,
+                  image: DecorationImage(
+                    image: NetworkImage(imgUrl ?? ''),
+                    fit: BoxFit.cover,
+                  )),
             ),
-          ),
-          const SizedBox(
-            height: 8.0,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              //NewsCubit.get(context).businessNews[0]['title'],
-              text?? '',
-              textAlign: TextAlign.right,
-              style: Theme.of(context).textTheme.bodyText1
+            const SizedBox(
+              height: 8.0,
             ),
-          ),
-          const SizedBox(
-            height: 8.0,
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                  //NewsCubit.get(context).businessNews[0]['title'],
+                  text ?? '',
+                  textAlign: TextAlign.left,
+                  style: Theme.of(context).textTheme.bodyText1),
+            ),
+            const SizedBox(
+              height: 8.0,
+            ),
+          ],
+        ),
       ),
     ),
   );
@@ -185,13 +191,14 @@ Widget errorView(IconData icon, String text)
            size: 50.0,
            color: Colors.grey,
          ),
-         Text(
-           text,
-           style: const TextStyle(
-               color: Colors.grey
-           ),
-         )
-       ],
-     ),
+        Text(
+          text,
+          style: const TextStyle(color: Colors.grey),
+        )
+      ],
+    ),
   );
 }
+
+void navigateTo(context, widget) =>
+    Navigator.push(context, MaterialPageRoute(builder: (context) => widget));
