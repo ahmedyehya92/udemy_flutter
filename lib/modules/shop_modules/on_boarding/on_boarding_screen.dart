@@ -3,17 +3,32 @@ import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:udemy_flutter/shared/components/components.dart';
 import 'package:udemy_flutter/shared/components/conestants.dart';
+import 'package:udemy_flutter/shared/network/local/cache_helper.dart';
 
 import '../login/login_screen.dart';
 
 class OnBoardingScreen extends StatefulWidget {
+  final CacheHelper cacheHelper;
+
+  OnBoardingScreen(this.cacheHelper);
+
   @override
-  State<OnBoardingScreen> createState() => _OnBoardingScreenState();
+  State<OnBoardingScreen> createState() => _OnBoardingScreenState(cacheHelper);
 }
 
 class _OnBoardingScreenState extends State<OnBoardingScreen> {
+  final CacheHelper cacheHelper;
+
+  _OnBoardingScreenState(this.cacheHelper);
+
   var boardingController = PageController();
   bool isLastPage = false;
+
+  void submit() {
+    cacheHelper.saveData(key: "onBoardingOpened", value: true);
+    navigateAndFinish(context, ShopLoginScreen());
+  }
+
   List<BoardingModel> boardingList = [
     BoardingModel(
       title: 'Order Online',
@@ -28,7 +43,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     BoardingModel(
       title: 'Delivery Service',
       body:
-          'Modern delivering technologies, Shipping to the porch of your apartments',
+      'Modern delivering technologies, Shipping to the porch of your apartments',
       image: 'assets/images/boarding3.jpg',
     )
   ];
@@ -48,7 +63,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 ),
               ),
               onPressed: () {
-                navigateAndFinish(context, ShopLoginScreen());
+                submit();
               },
             )
           ],
@@ -93,7 +108,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                           duration: Duration(milliseconds: 1000),
                           curve: Curves.fastLinearToSlowEaseIn);
                     } else {
-                      navigateAndFinish(context, ShopLoginScreen());
+                      submit();
                     }
                   },
                   child: Icon(Icons.arrow_forward_ios),
@@ -105,33 +120,33 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   }
 
   Widget buildBoardingItem(BoardingModel boardingItem) => Column(
-        children: [
-          Expanded(
-            flex: 1,
-            child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Image(
-                image: AssetImage(boardingItem.image),
-              ),
-            ),
+    children: [
+      Expanded(
+        flex: 1,
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Image(
+            image: AssetImage(boardingItem.image),
           ),
-          Expanded(
-            flex: 1,
-            child: Column(children: [
-              SizedBox(height: 16.0),
-              Text(boardingItem.title,
-                  style:
-                      TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
-              SizedBox(height: 16.0),
-              Text(boardingItem.body,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                  )),
-            ]),
-          )
-        ],
-      );
+        ),
+      ),
+      Expanded(
+        flex: 1,
+        child: Column(children: [
+          SizedBox(height: 16.0),
+          Text(boardingItem.title,
+              style:
+              TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
+          SizedBox(height: 16.0),
+          Text(boardingItem.body,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 20.0,
+              )),
+        ]),
+      )
+    ],
+  );
 }
 
 class BoardingModel {
@@ -141,3 +156,4 @@ class BoardingModel {
 
   BoardingModel({required this.body, required this.title, required this.image});
 }
+

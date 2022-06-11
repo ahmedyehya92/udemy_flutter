@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udemy_flutter/app_bloc/app_cubit.dart';
 import 'package:udemy_flutter/app_bloc/app_states.dart';
+import 'package:udemy_flutter/modules/shop_modules/login/login_screen.dart';
 import 'package:udemy_flutter/shared/components/conestants.dart';
+import 'package:udemy_flutter/shared/network/local/cache_helper.dart';
 import 'package:udemy_flutter/shared/styles/themes.dart';
 
 import 'layout/news/cubit/news_cubit.dart';
@@ -16,7 +18,15 @@ void main() {
     () {
       // Use cubits...
       WidgetsFlutterBinding.ensureInitialized();
-      runApp(MyApp());
+      CacheHelper cacheHelper = CacheHelper();
+      Widget firstScreen = OnBoardingScreen(cacheHelper);
+      cacheHelper.getBool(key: "onBoardingOpened")?.then((value) {
+        if (value == false)
+          firstScreen = OnBoardingScreen(cacheHelper);
+        else
+          firstScreen = ShopLoginScreen();
+      });
+      runApp(MyApp(firstScreen));
     },
     blocObserver: MyBlocObserver(),
   );
@@ -29,6 +39,10 @@ void main() {
 
 class MyApp extends StatelessWidget {
   //const MyApp({Key? key}) : super(key: key);
+
+  final Widget firstScreen;
+
+  MyApp(this.firstScreen, {Key? key}) : super(key: key);
 
   // manager and builder design
   @override
@@ -46,11 +60,11 @@ class MyApp extends StatelessWidget {
           listener: (context, state) {},
           builder: (context, state) {
             ThemeMode? themeMode =
-                AppCubit.get(context).themMode == ThemeAppMode.light
-                    ? ThemeMode.light
-                    : AppCubit.get(context).themMode == ThemeAppMode.dark
-                        ? ThemeMode.dark
-                        : ThemeMode.light;
+            AppCubit.get(context).themMode == ThemeAppMode.light
+                ? ThemeMode.light
+                : AppCubit.get(context).themMode == ThemeAppMode.dark
+                ? ThemeMode.dark
+                : ThemeMode.light;
             return MaterialApp(
                 debugShowCheckedModeBanner: false,
                 themeMode: themeMode,
@@ -58,7 +72,7 @@ class MyApp extends StatelessWidget {
                 darkTheme: darkTheme,
                 home: Directionality(
                   textDirection: TextDirection.ltr,
-                  child: OnBoardingScreen(),
+                  child: firstScreen,
                 ));
           }),
     );
