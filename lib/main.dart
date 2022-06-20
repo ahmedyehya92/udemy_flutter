@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udemy_flutter/app_bloc/app_cubit.dart';
@@ -7,26 +8,29 @@ import 'package:udemy_flutter/modules/shop_modules/login/login_screen.dart';
 import 'package:udemy_flutter/shared/components/conestants.dart';
 import 'package:udemy_flutter/shared/network/local/cache_helper.dart';
 import 'package:udemy_flutter/shared/styles/themes.dart';
-
+import 'di/injection.dart';
 import 'layout/news/cubit/news_cubit.dart';
 import 'modules/shop_modules/on_boarding/on_boarding_screen.dart';
 import 'shared/bloc_observer.dart';
 
-void main() {
+void main() async {
   // run widget
   BlocOverrides.runZoned(
-    () {
+    () async {
       // Use cubits...
       WidgetsFlutterBinding.ensureInitialized();
+      await configureDependencies();
       CacheHelper cacheHelper = CacheHelper();
       Widget firstScreen = OnBoardingScreen(cacheHelper);
-      cacheHelper.getBool(key: "onBoardingOpened")?.then((value) {
-        if (value == false)
-          firstScreen = OnBoardingScreen(cacheHelper);
+      cacheHelper.getBool(key: 'onBoardingOpened')?.then((value) {
+        if (kDebugMode) {print('get onBoardingOpened => $value');}
+        if (value == null || value == false)
+          runApp(MyApp(OnBoardingScreen(cacheHelper)));
+
         else
-          firstScreen = ShopLoginScreen();
+          runApp(MyApp(ShopLoginScreen()));
       });
-      runApp(MyApp(firstScreen));
+
     },
     blocObserver: MyBlocObserver(),
   );

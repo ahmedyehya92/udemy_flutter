@@ -14,6 +14,7 @@ enum ThemeAppMode {
   const ThemeAppMode(this.value);
 }
 
+
 Map<int, Color> color = {
   50: Color.fromRGBO(85, 73, 173, .9),
   100: Color.fromRGBO(85, 73, 173, .9),
@@ -26,3 +27,5 @@ Map<int, Color> color = {
   800: Color.fromRGBO(85, 73, 173, .9),
   900: Color.fromRGBO(85, 73, 173, 1),
 };
+
+const THEME_MODE_SHARED_PREF_KEY = 'THEME_MODE_SHARED_PREF_KEY';

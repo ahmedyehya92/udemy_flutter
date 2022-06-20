@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:udemy_flutter/shared/components/components.dart';
@@ -25,7 +26,10 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   bool isLastPage = false;
 
   void submit() {
-    cacheHelper.saveData(key: "onBoardingOpened", value: true);
+    cacheHelper.saveData(key: 'onBoardingOpened', value: true);
+    cacheHelper.getBool(key: 'onBoardingOpened')?.then((value) {
+      if (kDebugMode) {print('get onBoardingOpened after set => $value');}
+    });
     navigateAndFinish(context, ShopLoginScreen());
   }
 

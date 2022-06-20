@@ -24,7 +24,7 @@ class CacheHelper {
     required String key,
     required dynamic value,
   }) async {
-    switch (value) {
+    switch (value.runtimeType) {
       case String:
         return await sharedPreferences.then(
             (sharedPreferences) => sharedPreferences.setString(key, value));
@@ -33,7 +33,10 @@ class CacheHelper {
             .then((sharedPreferences) => sharedPreferences.setInt(key, value));
       case bool:
         return await sharedPreferences
-            .then((sharedPreferences) => sharedPreferences.setBool(key, value));
+            .then((sharedPreferences)  {
+              print('setBool - $key == $value');
+              return sharedPreferences.setBool(key, value);
+            });
       case double:
         return await sharedPreferences.then(
             (sharedPreferences) => sharedPreferences.setDouble(key, value));
@@ -43,6 +46,18 @@ class CacheHelper {
 
   Future<bool?>? getBool({required String key}) async {
     return await sharedPreferences
-        .then((sharedPreferences) => sharedPreferences.getBool(key));
+        .then((mSharedPreferences) => mSharedPreferences.getBool(key));
+  }
+  Future<int?>? getInt({required String key}) async {
+    return await sharedPreferences
+        .then((mSharedPreferences) => mSharedPreferences.getInt(key));
+  }
+  Future<double?>? getDouble({required String key}) async {
+    return await sharedPreferences
+        .then((mSharedPreferences) => mSharedPreferences.getDouble(key));
+  }
+  Future<String?>? getString({required String key}) async {
+    return await sharedPreferences
+        .then((mSharedPreferences) => mSharedPreferences.getString(key));
   }
 }
