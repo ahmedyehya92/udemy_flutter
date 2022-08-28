@@ -4,12 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udemy_flutter/app_bloc/app_cubit.dart';
 import 'package:udemy_flutter/app_bloc/app_states.dart';
+import 'package:udemy_flutter/layout/shop_app/shop_layout.dart';
+import 'package:udemy_flutter/modules/begginer_modules/messanger/messanger_screen.dart';
 import 'package:udemy_flutter/modules/shop_modules/login/login_screen.dart';
 import 'package:udemy_flutter/shared/components/conestants.dart';
 import 'package:udemy_flutter/shared/network/local/cache_helper.dart';
 import 'package:udemy_flutter/shared/styles/themes.dart';
 import 'di/injection.dart';
 import 'layout/news/cubit/news_cubit.dart';
+import 'layout/shop_app/cubit.dart';
+import 'modules/begginer_modules/messanger/messanger_screen_list_view.dart';
 import 'modules/shop_modules/on_boarding/on_boarding_screen.dart';
 import 'shared/bloc_observer.dart';
 
@@ -21,14 +25,27 @@ void main() async {
       WidgetsFlutterBinding.ensureInitialized();
       await configureDependencies();
       CacheHelper cacheHelper = CacheHelper();
-      Widget firstScreen = OnBoardingScreen(cacheHelper);
       cacheHelper.getBool(key: 'onBoardingOpened')?.then((value) {
         if (kDebugMode) {print('get onBoardingOpened => $value');}
         if (value == null || value == false)
           runApp(MyApp(OnBoardingScreen(cacheHelper)));
 
-        else
-          runApp(MyApp(ShopLoginScreen()));
+        else {
+          cacheHelper.getData(keys: [IS_LOGGED_IN_SHARED_PREF_KEY, TOKEN_SHARED_PREF_KEY])?.then((value) {
+            if ((value?[IS_LOGGED_IN_SHARED_PREF_KEY] as bool?) != false && ((value?[TOKEN_SHARED_PREF_KEY]) as String?)?.isNotEmpty == true)
+              runApp(MyApp(ShopLayout()));
+            else
+              runApp(MyApp(ShopLoginScreen(cacheHelper)));
+          });
+
+          cacheHelper.getBool(key: IS_LOGGED_IN_SHARED_PREF_KEY)?.then((value) {
+            if(value == true)
+              runApp(MyApp(ShopLayout()));
+            else
+              runApp(MyApp(ShopLoginScreen(cacheHelper)));
+          });
+
+        }
       });
 
     },
@@ -54,7 +71,10 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (BuildContext context) => AppCubit(),
+          create: (BuildContext context) => AppCubit()..getThemeMode(),
+        ),
+        BlocProvider(
+          create: (BuildContext context) => ShopCubit(),
         ),
         BlocProvider(
           create: (context) => NewsCubit(),
@@ -75,8 +95,8 @@ class MyApp extends StatelessWidget {
                 theme: theme,
                 darkTheme: darkTheme,
                 home: Directionality(
-                  textDirection: TextDirection.ltr,
-                  child: firstScreen,
+                  textDirection: TextDirection.rtl,
+                  child: MessangerScreenListView(),
                 ));
           }),
     );

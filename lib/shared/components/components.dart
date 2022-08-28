@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:udemy_flutter/shared/components/conestants.dart';
 
 import '../../modules/news_modules/web_view/web_view_screen.dart';
@@ -212,3 +213,26 @@ void navigateAndFinish(context, widget) => Navigator.pushAndRemoveUntil(
     context,
     MaterialPageRoute(builder: (context) => widget),
     (Route<dynamic> route) => false);
+
+void showToast(String message, ToastColorMode toastColorMode)
+{
+  Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 5,
+      backgroundColor: chooseToastColor(toastColorMode),
+      textColor: Colors.white,
+      fontSize: 16.0);
+}
+
+Color chooseToastColor(ToastColorMode toastColorMode) =>
+    toastColorMode.name == ToastColorMode.SUCCESS.name ? Colors.green :
+    toastColorMode.name == ToastColorMode.ERROR.name ? Colors.redAccent :
+    Colors.orange;
+
+
+enum ToastColorMode {
+  SUCCESS,ERROR, WARNING
+}
+

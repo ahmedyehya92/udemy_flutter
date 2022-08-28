@@ -30,7 +30,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     cacheHelper.getBool(key: 'onBoardingOpened')?.then((value) {
       if (kDebugMode) {print('get onBoardingOpened after set => $value');}
     });
-    navigateAndFinish(context, ShopLoginScreen());
+    navigateAndFinish(context, ShopLoginScreen(cacheHelper));
   }
 
   List<BoardingModel> boardingList = [

@@ -2,15 +2,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:udemy_flutter/layout/shop_app/shop_layout.dart';
 import 'package:udemy_flutter/modules/shop_modules/login/cubit/login_cubit.dart';
 import 'package:udemy_flutter/modules/shop_modules/login/cubit/login_states.dart';
 import 'package:udemy_flutter/modules/shop_modules/register/register_screen.dart';
 import 'package:udemy_flutter/shared/components/components.dart';
+import 'package:udemy_flutter/shared/components/conestants.dart';
+import 'package:udemy_flutter/shared/network/local/cache_helper.dart';
 
 class ShopLoginScreen extends StatelessWidget {
+  final CacheHelper cacheHelper;
   TextEditingController emailFieldController = TextEditingController();
   TextEditingController passwordFieldController = TextEditingController();
   var formKey = GlobalKey<FormState>();
+  ShopLoginScreen(this.cacheHelper);
 
   @override
   Widget build(BuildContext context) {
@@ -19,24 +24,23 @@ class ShopLoginScreen extends StatelessWidget {
       child: BlocConsumer<ShopLoginCubit, ShopLoginState>(
         listener: (context, state) {
           if (state is ShopLoginSuccessState) {
-            Fluttertoast.showToast(
-                msg: state.loginModel.message ??
-                    'Wrong error from server or integration',
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 5,
-                backgroundColor: Colors.green,
-                textColor: Colors.white,
-                fontSize: 16.0);
+
+            showToast(
+                state.loginModel.message ?? 'done',
+                ToastColorMode.SUCCESS);
+            cacheHelper.saveData(key: IS_LOGGED_IN_SHARED_PREF_KEY, value: true)?.then((value) {
+              navigateAndFinish(context, ShopLayout());
+            });
+            
+            cacheHelper.saveMultipleData(args: {
+              IS_LOGGED_IN_SHARED_PREF_KEY: true,
+              TOKEN_SHARED_PREF_KEY: state.loginModel.data?.token
+            });
+            
+
+
           } else if (state is ShopLoginFailureState) {
-            Fluttertoast.showToast(
-                msg: state.error,
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 5,
-                backgroundColor: Colors.redAccent,
-                textColor: Colors.white,
-                fontSize: 16.0);
+            showToast(state.error, ToastColorMode.ERROR);
             /*showDialog(context: context, builder: (context) => AlertDialog(
                 title: Text(
                     'Wrong',
